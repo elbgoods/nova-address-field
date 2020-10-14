@@ -21,7 +21,7 @@ class NovaAddressField extends Field
         $this->latitude('latitude')
             ->longitude('longitude')
             ->fieldOptions([])
-            ->at(53.54923, 9.98832);
+            ->referencePoint(53.54923, 9.98832);
     }
 
     public function usingHere(): self
