@@ -9,10 +9,11 @@
     "require": {
         "php": ">=7.1.0"
     },
-    "autoload": {
-        "psr-4": {
-            "Elbgoods\\NovaAddressField\\": "src/"
-        }
+    "require-dev": {
+        "elbgoods/ci-test-tools": "^1.12"
+    },
+    "config": {
+        "sort-packages": true
     },
     "extra": {
         "laravel": {
@@ -21,9 +22,21 @@
             ]
         }
     },
-    "config": {
-        "sort-packages": true
+    "autoload": {
+        "psr-4": {
+            "Elbgoods\\NovaAddressField\\": "src/"
+        }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "fix": "vendor/bin/php-cs-fixer fix --using-cache=no --config=vendor/elbgoods/ci-test-tools/configs/.php_cs.dist src",
+        "test": [
+            "vendor/bin/phpmnd src --non-zero-exit-on-violation",
+            "vendor/bin/phpmd src text vendor/elbgoods/ci-test-tools/configs/phpmd.xml",
+            "vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config=vendor/elbgoods/ci-test-tools/configs/.php_cs.dist src",
+            "vendor/bin/tlint lint src --no-interaction",
+            "vendor/bin/phpinsights analyse --config-path=vendor/elbgoods/ci-test-tools/configs/phpinsights.php --no-interaction -v --disable-security-check --min-quality=100 --min-architecture=100 --min-style=100 src"
+        ]
+    }
 }
