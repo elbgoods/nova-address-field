@@ -2,6 +2,7 @@
 
 namespace Elbgoods\NovaAddressField;
 
+use Elbgoods\LaravelAddressable\Models\Address;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -97,7 +98,17 @@ class NovaAddressField extends Field
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute): void
     {
         if ($request->exists($requestAttribute)) {
-            $model->{$attribute} = json_decode($request[$requestAttribute], true);
+            $addressAttribute = $model->{$attribute};
+            $addressData = json_decode($request[$requestAttribute], true);
+            if ($addressAttribute instanceof Address) {
+                $addressAttribute->properties = json_decode($request[$requestAttribute], true);
+                $addressAttribute->country_code = $addressData['country_code'];
+            } else {
+                $model->{$attribute} = [
+                    'properties' => json_decode($request[$requestAttribute], true),
+                    'country_code' => $addressData['country_code'],
+                ];
+            }
         }
     }
 }

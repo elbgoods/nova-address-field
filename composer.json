@@ -27,7 +27,7 @@
             "Elbgoods\\NovaAddressField\\": "src/"
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
         "fix": "vendor/bin/php-cs-fixer fix --using-cache=no --config=vendor/elbgoods/ci-test-tools/configs/.php_cs.dist src",

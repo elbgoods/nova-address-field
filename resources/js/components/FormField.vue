@@ -90,12 +90,13 @@ export default {
      */
     setInitialValue () {
       if (typeof this.field.value === 'object') {
-        this.value = this.field.value
+        this.value = this.field.value || {}
       } else if (typeof this.field.value === 'string') {
         this.value = JSON.parse(this.field.value)
       } else {
         this.value = {}
       }
+
       this.value.country_code = 'DE'
     },
 
