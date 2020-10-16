@@ -1,7 +1,6 @@
 <template>
   <default-field
     :field="field"
-    :errors="errors"
     :show-help-text="showHelpText"
     class="pb-0"
   >
@@ -26,21 +25,23 @@
           :for="getFieldId(fieldKey)"
           class="inline-block text-80 leading-tight mb-1"
         >{{ fieldProps.label }}</label>
-        <input
-          :id="getFieldId(fieldKey)"
-          v-model="value[fieldKey]"
-          type="text"
-          class="w-full form-control form-input form-input-bordered mb-3"
-          :class="errorClasses"
-          :placeholder="fieldProps.label"
-        >
+        <div class="mb-3">
+          <input
+            :id="getFieldId(fieldKey)"
+            v-model="value[fieldKey]"
+            type="text"
+            class="w-full form-control form-input form-input-bordered"
+            :class="hasAddressError(fieldKey) ? errorClasses : []"
+            :placeholder="fieldProps.label"
+          >
+          <div
+            v-if="hasAddressError(fieldKey)"
+            class="help-text error-text mt-2 text-danger"
+          >
+            {{ addressErrors[fieldKey][0] }}
+          </div>
+        </div>
       </div>
-      <p
-        v-if="hasError"
-        class="my-2 text-danger"
-      >
-        {{ firstError }}
-      </p>
     </template>
   </default-field>
 </template>
@@ -67,6 +68,15 @@ export default {
       required: true
     }
   },
+  computed: {
+    addressErrors () {
+      if (!this.hasError) {
+        return {}
+      }
+
+      return JSON.parse(this.firstError)
+    }
+  },
   methods: {
     getFieldId (fieldKey) {
       return this.field.name + ' ' + fieldKey
@@ -83,6 +93,16 @@ export default {
 
     emitLongitude (longitude) {
       Nova.$emit(this.field.longitude + '-value', longitude)
+    },
+
+    hasAddressError (fieldKey) {
+      if (!Object.prototype.hasOwnProperty.call(this.addressErrors, fieldKey)) {
+        return false
+      }
+
+      const errors = this.addressErrors[fieldKey]
+
+      return Array.isArray(errors) && errors.length > 0
     },
 
     /*
